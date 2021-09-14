@@ -4,6 +4,8 @@ import { sortBy } from 'lodash';
 import { ApiBundle, RequestStatus, ResourceInfo, UserRequest, Request } from "../../api/api";
 import { createRef, RefObject } from "react";
 import uuid from 'react-uuid'
+import Text from "antd/lib/typography/Text";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 export type BasketState = {
     [byResourceId: string]: BasketTableRow;
@@ -94,17 +96,22 @@ export const BasketTabHeader = (props: BasketTabHeaderProps) => {
 
     return (
         <>
-            <Form>
-                <Form.Item
-                    label='Имя заявителя:'
+            <div style={{ marginTop: 20 }} >
+                <Text style={{ marginRight: 20 }}>
+                    Имя заявителя:
+                </Text>
+                <Input
+                    style={{ width: 200 }}
+                    type='text'
+                    ref={declarerInputRef}
+                />
+                <Button
+                    type='primary'
+                    onClick={createRequest}
                 >
-                    <Input
-                        type='text'
-                        ref={declarerInputRef}
-                    />
-                </Form.Item>
-                <Button onClick={createRequest}>Создать</Button>
-            </Form>
+                    Создать
+                </Button>
+            </div>
         </>
     );
 }
@@ -135,11 +142,20 @@ export const BasketTabTable = (props: BasketTabTableProps) => {
             title: '',
             dataIndex: 'buutons',
             key: 'buutons',
-            width: 200,
+            width: 100,
             render: (_, item) => (
                 <>
-                    <Button shape="circle" icon="edit" onClick={() => onEdit(item)} />
-                    <Button shape="circle" icon="delete" onClick={() => onDelete(item.resourceId)} />
+                    <Button
+                        shape="circle"
+                        icon={<EditOutlined />}
+                        onClick={() => onEdit(item)}
+                    />
+                    <Button
+                        style={{ marginInline: 10}}
+                        shape="circle"
+                        icon={<DeleteOutlined />}
+                        onClick={() => onDelete(item.resourceId)}
+                    />
                 </>
             )
         }

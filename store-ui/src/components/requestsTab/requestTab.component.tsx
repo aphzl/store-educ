@@ -4,6 +4,8 @@ import { sortBy } from 'lodash';
 import { ApiBundle, UserRequest } from "../../api/api";
 import { Option } from "antd/lib/mentions";
 import { createRef, RefObject, useState } from "react";
+import Text from "antd/lib/typography/Text";
+import Search from "antd/lib/input/Search";
 
 type RequestsTabHeaderProps = {
     api: ApiBundle;
@@ -42,8 +44,8 @@ export const RequestsTab = (props: RequestsTabProps) => {
             table={
                 <RequestsTabTable
                     data={data}
-                    // api={api}
-                />}
+                />
+            }
         />
     );
 }
@@ -56,16 +58,24 @@ const RequestsTabHeader = (props: RequestsTabHeaderProps) => {
     };
 
     return (
-        <div>
+        <div style={{ marginTop: 20 }} >
+            <Text style={{ marginRight: 20 }}>
+                Искать:
+            </Text>
             <Select
+                style={{ width: 130 }}
                 defaultValue='all'
                 onChange={(v, o) => setLoadMethod(loadMathods[v])}
             >
                 <Option value='all'>Все</Option>
                 <Option value='by-declarer'>По заявителю</Option>
             </Select>
-            <Input type='text' ref={searchRef} />
-            <Button onClick={update} >Найти</Button>
+            <Search
+                style={{ width: 200 }}
+                type='text'
+                ref={searchRef}
+                onSearch={update}
+            />
         </div>
     );
 }

@@ -33,8 +33,12 @@ export const AddToBasketDialog = (props: AddToBasketDialogProps) => {
                     <Form.Item label='Доступно'>
                         {resource.available}
                     </Form.Item>
-                    <Form.Item label='Количество'>
+                    <Form.Item
+                        label='Количество'
+                    >
                         <InputNumber
+                            min={0}
+                            defaultValue={0}
                             type='number'
                             ref={inputRef}
                         />

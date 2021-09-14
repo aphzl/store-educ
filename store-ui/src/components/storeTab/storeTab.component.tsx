@@ -5,6 +5,9 @@ import { ApiBundle, Resource, ResourceInfo } from "../../api/api";
 import { Tab } from "../tab.component";
 import { sortBy } from 'lodash';
 import { SaveResourceDialog } from "./saveResourceDialog.component";
+import Search from "antd/lib/input/Search";
+import Text from "antd/lib/typography/Text";
+import { DeleteOutlined, EditOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 
 export type StoreTabProps = {
     api: ApiBundle;
@@ -88,17 +91,31 @@ const StoreTabHeader = (props: StoreTabHeaderProps) => {
     const addHandle = () => setAddResourceDiaologVisible(true);
     
     return (
-        <div>
+        <div style={{ marginTop: 20 }} >
+            <Text style={{ marginRight: 20 }}>
+                Искать:
+            </Text>
             <Select
+                style={{ width: 105 }}
                 defaultValue='all'
                 onChange={(v, o) => setLoadMethod(loadMathods[v])}
             >
                 <Option value='all'>Все</Option>
                 <Option value='by-name'>По имени</Option>
             </Select>
-            <Input type='text' ref={searchRef} />
-            <Button onClick={update}>Найти</Button>
-            <Button onClick={addHandle}>Добавить</Button>
+            <Search
+                style={{ width: 200 }}
+                type='text'
+                ref={searchRef}
+                onSearch={update}
+            />
+            <Button
+                style={{ marginLeft: 50 }}
+                type='primary'
+                onClick={addHandle}
+            >
+                Добавить
+            </Button>
             {addResourceDiaologVisible &&
                 <SaveResourceDialog
                     api={api}
@@ -152,12 +169,25 @@ const StoreTabTable = (props: StoreTableProp) => {
             title: '',
             dataIndex: 'buutons',
             key: 'buutons',
-            width: 200,
+            width: 150,
             render: (_, item) => (
                 <>
-                    <Button shape="circle" icon="basket" onClick={() => onAddToBasket(item)} />
-                    <Button shape="circle" icon="edit" onClick={() => onEdit(item)} />
-                    <Button shape="circle" icon="delete" onClick={() => onDelete(item.id)} />
+                    <Button                        
+                        shape="circle"
+                        icon={<ShoppingCartOutlined />} 
+                        onClick={() => onAddToBasket(item)}
+                    />
+                    <Button
+                        style={{ marginInline: 10}}
+                        shape="circle"
+                        icon={<EditOutlined />}
+                        onClick={() => onEdit(item)}
+                    />
+                    <Button
+                        shape="circle"
+                        icon={<DeleteOutlined />}
+                        onClick={() => onDelete(item.id)}
+                    />
                 </>
             )
         }
