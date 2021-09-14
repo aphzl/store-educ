@@ -20,7 +20,8 @@ export type Request = {
 
 export enum RequestStatus {
     CLOSE = 'CLOSE',
-    OPEN = 'OPEN'
+    OPEN = 'OPEN',
+    READY = 'READY'
 }
 
 export type UserRequest = {
