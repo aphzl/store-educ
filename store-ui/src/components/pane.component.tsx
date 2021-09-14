@@ -23,6 +23,7 @@ export const Pane = () => {
     const [basketState, setBasketState] = useState<BasketState>({});
     const [visibleAddToBasketDialog, setVisibleAddToBasketDialog] = useState<boolean>(false);
     const [addingResource, setAddingResource] = useState<ResourceInfo>();
+    const [updateStoreTab, setUpdateStoreTab] = useState<() => void> (() => () => {}/*api.resource.loadAll()*/);
 
     const closeBasketDialog = () => setVisibleAddToBasketDialog(false);
     const onSelect = (param: SelectInfo) => setSelectedTabKey(param.key);
@@ -73,6 +74,8 @@ export const Pane = () => {
                     setBasketState={setBasketState}
                     deleteFromBasket={deleteFromBasket}
                     clearBasketState={() => setBasketState({})}
+                    updateStoreTab={updateStoreTab}
+                    setUpdateStoreTab={m => setUpdateStoreTab(() => m)}
                 />
                 {visibleAddToBasketDialog &&
                     <AddToBasketDialog
@@ -95,17 +98,38 @@ type TabsPaneProps = {
     onAddToBasket: (resource: ResourceInfo) => void;
     deleteFromBasket: (resourceId: string) => void;
     clearBasketState: () => void;
+    // updateStoreTab: (searchValue?: string) => Promise<ResourceInfo[]>;
+    // setUpdateStoreTab: (func: (val?: string) => Promise<ResourceInfo[]>) => void;
+    updateStoreTab: () => void;
+    setUpdateStoreTab: (func: () => void) => void;
 };
 
 const TabsPane = (props: TabsPaneProps) => {
-    const { selectedTabKey, api, basketState, onAddToBasket, deleteFromBasket, clearBasketState } = props;
+    const {
+        selectedTabKey,
+        api,
+        basketState,
+        onAddToBasket,
+        deleteFromBasket,
+        clearBasketState,
+        updateStoreTab,
+        setUpdateStoreTab
+    } = props;
 
     const show = (key: string) => selectedTabKey === key ? 'block' : 'none';
+    const updateAll = () => {
+        console.log('dffd')
+        updateStoreTab();
+    };
 
     return (
         <>
             <div style={{ display: show(STORE_TAB_KEY) }}>
-                <StoreTab api={api} onAddToBasket={onAddToBasket} />
+                <StoreTab
+                    api={api}
+                    onAddToBasket={onAddToBasket}
+                    setUpdateStoreTab={setUpdateStoreTab}
+                />
             </div>
             <div style={{ display: show(REQUEST_TAB_KEY) }}>
                 <RequestsTab api={api} />
@@ -117,24 +141,9 @@ const TabsPane = (props: TabsPaneProps) => {
                     onBasketEdit={onAddToBasket}
                     onDelete={deleteFromBasket}
                     clearBasketState={clearBasketState}
+                    updateAll={updateAll}
                 />
             </div>
         </>
     );
 };
-
-
-
-
-
-
-
-
-
-export const TabHeader = () => {
-
-}
-
-export const TabTable = () => {
-
-}

@@ -7,6 +7,7 @@ import org.educ.store.repository.RequestRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +25,8 @@ public class RequestService {
 
     @Transactional
     public List<RequestDto> findOpenRequestByResourceId(String resourceId) {
-        return requestRepository.findByUserRequestStatusAndResourceId(RequestStatus.OPEN, resourceId).stream()
+        return requestRepository
+                .findByUserRequestStatusInAndResourceId(Arrays.asList(RequestStatus.OPEN, RequestStatus.READY), resourceId).stream()
                 .map(Request::toDto)
                 .collect(Collectors.toList());
     }

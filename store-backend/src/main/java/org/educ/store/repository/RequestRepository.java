@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface RequestRepository extends JpaRepository<Request, String> {
 
-    List<Request> findByUserRequestStatusAndResourceId(RequestStatus status, String resourceId);
+    List<Request> findByUserRequestStatusInAndResourceId(List<RequestStatus> status, String resourceId);
 
 }

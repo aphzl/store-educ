@@ -1,5 +1,5 @@
 package org.educ.store.model;
 
 public enum RequestStatus {
-    OPEN, CLOSE, READY
+    OPEN, READY, DONE, ABORT
 }

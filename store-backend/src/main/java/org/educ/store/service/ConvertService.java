@@ -9,9 +9,9 @@ import org.educ.store.model.entity.UserRequest;
 import org.educ.store.repository.UserRequestRepository;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,6 +40,7 @@ public class ConvertService {
                 : dto.getRequests().stream()
                         .map(this::toEntity)
                         .collect(Collectors.toList());
+        Optional<UserRequest> existing = userRequestRepository.findById(dto.getId());
 
         return UserRequest.builder()
                 .id(dto.getId())
@@ -47,6 +48,8 @@ public class ConvertService {
                 .comment(dto.getComment())
                 .status(dto.getStatus())
                 .requests(requests)
+                .createdAt(existing.map(UserRequest::getCreatedAt).orElse(null))
+                .updatedAt(existing.map(UserRequest::getUpdatedAt).orElse(null))
                 .build();
     }
 

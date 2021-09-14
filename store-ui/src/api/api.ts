@@ -4,25 +4,33 @@ export type Resource = {
     name: string;
     amount: number;
     comment?: string;
-}
+};
 
 export type ResourceInfo = Resource & {
     reserved: number;
     available: number;
-}
+};
 
 export type Request = {
     id: string;
     userRequestId: string;
     resourceId: string;
     amount: number;
-}
+};
 
 export enum RequestStatus {
-    CLOSE = 'CLOSE',
     OPEN = 'OPEN',
-    READY = 'READY'
-}
+    READY = 'READY',
+    DONE = 'DONE',
+    ABORT = 'ABORT'
+};
+
+export const statusMap = {
+    [RequestStatus.OPEN]: 'Открыта',
+    [RequestStatus.READY]: 'Готова к выдаче',
+    [RequestStatus.DONE]: 'Обработана',
+    [RequestStatus.ABORT]: 'Отменена',
+};
 
 export type UserRequest = {
     id: string;
@@ -32,20 +40,30 @@ export type UserRequest = {
     createdAt?: number;
     updatedAt?: number;
     requests: Request[];
-}
+};
 
 export class ApiBundle {
     public resource: ResourceApi = new ResourceApi(this.url);
     public userRequest: UserRequestApi = new UserRequestApi(this.url);
 
     constructor(private url: string) {}
-}
+};
 
 export class ResourceApi {
     private urn = '/api/resource';
 
     public loadAll = (): Promise<ResourceInfo[]> => 
         fetch(`${this.url}${this.urn}`)
+                .then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+
+    public findById = (id: string): Promise<Resource> =>
+        fetch(`${this.url}${this.urn}/${id}`)
                 .then((response) => {
                     if (response.status >= 200 && response.status < 300) {
                         return response.json();
@@ -88,13 +106,13 @@ export class ResourceApi {
                         throw response;
                     }
                 });
-    }
+    };
 
-    constructor(private url: string) {}
-}
+    constructor(private url: string) {};
+};
 
 export class UserRequestApi {
-    private urn = '/api/user-request'
+    private urn = '/api/user-request';
     public loadAll = () =>
         fetch(`${this.url}${this.urn}`)
                 .then((response) => {
@@ -126,7 +144,7 @@ export class UserRequestApi {
                         throw response;
                     }
                 });
-    }
+    };
 
-    constructor(private url: string) {}
-}
+    constructor(private url: string) {};
+};

@@ -18,6 +18,7 @@ export type BasketTabProps = {
     onBasketEdit: (resource: ResourceInfo) => void;
     onDelete: (resourceId: string) => void;
     clearBasketState: () => void;
+    updateAll: () => void;
 };
 
 type BasketTabTableProps = {
@@ -40,7 +41,7 @@ type BasketTabHeaderProps = {
 };
 
 export const BasketTab = (props: BasketTabProps) => {
-    const { basketState, api, onBasketEdit, onDelete, clearBasketState } = props;
+    const { basketState, api, onBasketEdit, onDelete, clearBasketState, updateAll } = props;
 
     const declarerInputRef = createRef<Input>();
 
@@ -69,7 +70,7 @@ export const BasketTab = (props: BasketTabProps) => {
             requests
         }
 
-        api.userRequest.save(userRequest);
+        api.userRequest.save(userRequest).then(() => updateAll());
         clearBasketState();
     };
 
@@ -92,7 +93,7 @@ export const BasketTab = (props: BasketTabProps) => {
     );
 };
 
-export const BasketTabHeader = (props: BasketTabHeaderProps) => {
+const BasketTabHeader = (props: BasketTabHeaderProps) => {
     const { declarerInputRef, createRequest } = props;
 
     return (

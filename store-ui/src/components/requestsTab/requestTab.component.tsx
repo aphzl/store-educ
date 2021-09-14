@@ -1,27 +1,32 @@
 import { Button, Input, Table, Select } from "antd";
 import { Tab } from "../tab.component";
 import { sortBy } from 'lodash';
-import { ApiBundle, UserRequest } from "../../api/api";
+import { ApiBundle, RequestStatus, Resource, statusMap, UserRequest } from "../../api/api";
 import { Option } from "antd/lib/mentions";
 import { createRef, RefObject, useState } from "react";
 import Text from "antd/lib/typography/Text";
 import Search from "antd/lib/input/Search";
 import '../styles.css';
+import { EditOutlined } from "@ant-design/icons";
+import { EditRequestDialog } from "./editRequestDialog.component";
 
 type RequestsTabHeaderProps = {
     api: ApiBundle;
     searchRef: RefObject<Input>;    
     update: () => void;
     setLoadMethod: (func: (val?: string) => Promise<UserRequest[]>) => void;
-}
+};
 
 type RequestsTabProps = {
     api: ApiBundle;
-}
+};
 
 type RequestsTabTableProps = {
     data: UserRequest[];
-}
+    save: (request: UserRequest) => Promise<boolean>;
+    update: () => void;
+    getResource: (id: string) => Promise<Resource>;
+};
 
 export const RequestsTab = (props: RequestsTabProps) => {
     const { api } = props;
@@ -31,6 +36,8 @@ export const RequestsTab = (props: RequestsTabProps) => {
     const [load, setLoad] = useState<(searchValue?: string) => Promise<UserRequest[]>> (() => () => api.userRequest.loadAll());
     const getSearchValue = () => searchRef?.current?.input.value;
     const update = () => load(getSearchValue()).then(r => setData(r));
+    const save = (request: UserRequest) => api.userRequest.save(request);
+    const getResource = (id: string) => api.resource.findById(id);
 
     return (
         <Tab
@@ -45,11 +52,14 @@ export const RequestsTab = (props: RequestsTabProps) => {
             table={
                 <RequestsTabTable
                     data={data}
+                    save={save}
+                    update={update}
+                    getResource={getResource}
                 />
             }
         />
     );
-}
+};
 
 const RequestsTabHeader = (props: RequestsTabHeaderProps) => {
     const { api, searchRef, update, setLoadMethod } = props;
@@ -79,51 +89,90 @@ const RequestsTabHeader = (props: RequestsTabHeaderProps) => {
             />
         </div>
     );
-}
+};
 
 const RequestsTabTable = (props: RequestsTabTableProps) => {
-    const { data } = props;
+    const { data, save, update, getResource } = props;
+
+    const [visibleEditRequestDialog, setVisibleEditRequestDialog] = useState<boolean>(false);
+    const [selectedRequest, setSelectedRequest] = useState<UserRequest>({} as UserRequest);
+    const [resources, setResources] = useState<Resource[]>([])
+    
+    const closeEditDialog = () => setVisibleEditRequestDialog(false);
+    const onEdit = (userRequest: UserRequest) => {
+        userRequest.requests
+            .forEach(r => getResource(r.resourceId)
+                .then(resource => setResources([...resources, resource])));
+        setSelectedRequest(userRequest);
+        setVisibleEditRequestDialog(true);
+    };
+    const onOkEdit = (request: UserRequest) => {
+        save(request)
+            .then(r => update());
+        closeEditDialog();
+    };
 
     const columns =
     [
         {
             title: 'Заявитель',
             dataIndex: 'declarer',
-            key: 'declarer'
+            key: 'declarer',
         },
         {
             title: 'Дата создания',
             dataIndex: 'createdAt',
             key: 'createdAt',
-            width: 200
+            width: 200,
+            render: (val, item) => (<>{new Date(val).toLocaleString()}</>)
         },
         {
             title: 'Дата изменения',
             dataIndex: 'updatedAt',
             key: 'updatedAt',
-            width: 200
+            width: 200,
+            render: (val, item) => (<>{new Date(val).toLocaleString()}</>)
         },
         {
             title: 'Статус',
             dataIndex: 'status',
             key: 'status',
-            width: 200
+            width: 200,
+            render: (val: RequestStatus, item) => (<>{statusMap[val]}</>)
         },
         {
-            title: 'Коментарий',
-            dataIndex: 'comment',
-            key: 'comment'
+            title: '',
+            dataIndex: 'buutons',
+            key: 'buutons',
+            render: (_, item) => (
+                <>
+                    <Button
+                        style={{ marginInline: 10}}
+                        shape="circle"
+                        icon={<EditOutlined />}
+                        onClick={() => onEdit(item)}
+                    />
+                </>
+            )
         }
-    ]
+    ];
 
     return (
         <div>
             <Table
                 columns={columns}
-                dataSource={data}
+                dataSource={sortBy(data, i => i.createdAt).reverse()}
                 size="middle"
                 rowKey={(item) => item.id}
             />
+            {visibleEditRequestDialog && 
+                <EditRequestDialog
+                    selectedRequest={selectedRequest}
+                    resources={resources}
+                    close={closeEditDialog}
+                    onOk={onOkEdit}
+                />
+            }
         </div>
     );
-}
+};

@@ -35,14 +35,14 @@ public class ResourceController {
     }
 
     @GetMapping("/{id}")
-    public ResourceDto findById(String id) {
+    public ResourceDto findById(@PathVariable("id") String id) {
         return resourceService.findById(id);
     }
 
-    @GetMapping("/{inventoryId}/inventory")
-    public ResourceDto findByInventoryId(@PathVariable("inventoryId") String inventoryId) {
-        return resourceService.findByInventoryId(inventoryId);
-    }
+//    @GetMapping("/{inventoryId}/inventory")
+//    public ResourceDto findByInventoryId(@PathVariable("inventoryId") String inventoryId) {
+//        return resourceService.findByInventoryId(inventoryId);
+//    }
 
     @GetMapping("/{text}/text")
     public List<ResourceInfo> findByNameWith(@PathVariable("text") String text) {

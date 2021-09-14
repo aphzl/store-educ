@@ -13,6 +13,7 @@ import '../styles.css';
 export type StoreTabProps = {
     api: ApiBundle;
     onAddToBasket: (resource: ResourceInfo) => void;
+    setUpdateStoreTab: (func: () => void) => void;
 };
 
 type StoreTabHeaderProps = {
@@ -27,10 +28,10 @@ type StoreTableProp = {
     onDelete: (id: string) => void;
     onEdit: (resource: ResourceInfo) => void;
     onAddToBasket: (resource: ResourceInfo) => void;
-}
+};
 
 export const StoreTab = (props: StoreTabProps) => {
-    const { api, onAddToBasket } = props;
+    const { api, onAddToBasket, setUpdateStoreTab } = props;
 
     const [data, setData] = useState<ResourceInfo[]>([]);
     const [visibleEditResourceDialog, setVisibleEditResourceDialog] = useState<boolean>(false);
@@ -41,7 +42,7 @@ export const StoreTab = (props: StoreTabProps) => {
 
     const onDelete = async (id: string) =>
         api.resource.delete(id)
-                .then(r => load(getSearchValue())
+                .then(() => load(getSearchValue())
                     .then(lr => setData(lr)));
     const editHandle = (resource: ResourceInfo) => {
         setSelectedResource(resource);
@@ -49,6 +50,10 @@ export const StoreTab = (props: StoreTabProps) => {
     };
     const getSearchValue = () => searchRef?.current?.input.value;
     const update = () => load(getSearchValue()).then(r => setData(r));
+    const setLoadMethod = m => {
+        setLoad(() => m);
+        setUpdateStoreTab(() => m(getSearchValue()).then(r => setData(r)));
+    };
 
     return (
         <>
@@ -57,7 +62,7 @@ export const StoreTab = (props: StoreTabProps) => {
                     <StoreTabHeader
                         api={api}
                         update={update}
-                        setLoadMethod={m => setLoad(() => m)}
+                        setLoadMethod={setLoadMethod}
                         searchRef={searchRef}
                     />
                 }
@@ -125,10 +130,12 @@ const StoreTabHeader = (props: StoreTabHeaderProps) => {
                 />}
         </div>
     );
-}
+};
 
 const StoreTabTable = (props: StoreTableProp) => {
     const { data, onDelete, onEdit, onAddToBasket } = props;
+
+    const addDisabled = (resource: ResourceInfo) => resource.available === 0;
 
     const columns =
     [
@@ -173,7 +180,8 @@ const StoreTabTable = (props: StoreTableProp) => {
             width: 150,
             render: (_, item) => (
                 <>
-                    <Button                        
+                    <Button
+                        disabled={addDisabled(item)}
                         shape="circle"
                         icon={<ShoppingCartOutlined />} 
                         onClick={() => onAddToBasket(item)}
@@ -192,7 +200,7 @@ const StoreTabTable = (props: StoreTableProp) => {
                 </>
             )
         }
-    ]
+    ];
 
     return (
         <div>
@@ -204,4 +212,4 @@ const StoreTabTable = (props: StoreTableProp) => {
             />
         </div>
     );
-}
+};
