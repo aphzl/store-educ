@@ -8,6 +8,7 @@ import { SaveResourceDialog } from "./saveResourceDialog.component";
 import Search from "antd/lib/input/Search";
 import Text from "antd/lib/typography/Text";
 import { DeleteOutlined, EditOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import '../styles.css';
 
 export type StoreTabProps = {
     api: ApiBundle;
@@ -91,12 +92,12 @@ const StoreTabHeader = (props: StoreTabHeaderProps) => {
     const addHandle = () => setAddResourceDiaologVisible(true);
     
     return (
-        <div style={{ marginTop: 20 }} >
+        <div className='headerContainer' >
             <Text style={{ marginRight: 20 }}>
                 Искать:
             </Text>
             <Select
-                style={{ width: 105 }}
+                className='headerSelect'
                 defaultValue='all'
                 onChange={(v, o) => setLoadMethod(loadMathods[v])}
             >

@@ -6,6 +6,7 @@ import { Option } from "antd/lib/mentions";
 import { createRef, RefObject, useState } from "react";
 import Text from "antd/lib/typography/Text";
 import Search from "antd/lib/input/Search";
+import '../styles.css';
 
 type RequestsTabHeaderProps = {
     api: ApiBundle;
@@ -58,12 +59,12 @@ const RequestsTabHeader = (props: RequestsTabHeaderProps) => {
     };
 
     return (
-        <div style={{ marginTop: 20 }} >
+        <div className='headerContainer' >
             <Text style={{ marginRight: 20 }}>
                 Искать:
             </Text>
             <Select
-                style={{ width: 130 }}
+                className='headerSelect'
                 defaultValue='all'
                 onChange={(v, o) => setLoadMethod(loadMathods[v])}
             >

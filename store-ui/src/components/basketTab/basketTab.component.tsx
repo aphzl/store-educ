@@ -6,6 +6,7 @@ import { createRef, RefObject } from "react";
 import uuid from 'react-uuid'
 import Text from "antd/lib/typography/Text";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import '../styles.css';
 
 export type BasketState = {
     [byResourceId: string]: BasketTableRow;
@@ -96,7 +97,7 @@ export const BasketTabHeader = (props: BasketTabHeaderProps) => {
 
     return (
         <>
-            <div style={{ marginTop: 20 }} >
+            <div className='headerContainer' >
                 <Text style={{ marginRight: 20 }}>
                     Имя заявителя:
                 </Text>
