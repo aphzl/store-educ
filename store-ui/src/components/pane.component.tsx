@@ -23,7 +23,7 @@ export const Pane = () => {
     const [basketState, setBasketState] = useState<BasketState>({});
     const [visibleAddToBasketDialog, setVisibleAddToBasketDialog] = useState<boolean>(false);
     const [addingResource, setAddingResource] = useState<ResourceInfo>();
-    const [updateStoreTab, setUpdateStoreTab] = useState<() => void> (() => () => {}/*api.resource.loadAll()*/);
+    const [updateStoreTab, setUpdateStoreTab] = useState<() => void> (() => () => {});
 
     const closeBasketDialog = () => setVisibleAddToBasketDialog(false);
     const onSelect = (param: SelectInfo) => setSelectedTabKey(param.key);
@@ -98,8 +98,6 @@ type TabsPaneProps = {
     onAddToBasket: (resource: ResourceInfo) => void;
     deleteFromBasket: (resourceId: string) => void;
     clearBasketState: () => void;
-    // updateStoreTab: (searchValue?: string) => Promise<ResourceInfo[]>;
-    // setUpdateStoreTab: (func: (val?: string) => Promise<ResourceInfo[]>) => void;
     updateStoreTab: () => void;
     setUpdateStoreTab: (func: () => void) => void;
 };

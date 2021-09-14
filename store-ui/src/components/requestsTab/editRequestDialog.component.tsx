@@ -1,8 +1,7 @@
 import { Modal, Select, Table } from "antd";
 import { Option } from "antd/lib/mentions";
-import { RefSelectProps } from "antd/lib/select";
 import Text from "antd/lib/typography/Text";
-import { createRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { RequestStatus, statusMap, UserRequest, Request, Resource } from "../../api/api";
 
 type TableData = Request & {
@@ -12,15 +11,22 @@ type TableData = Request & {
 
 type EditRequestDialogProps = {
     selectedRequest: UserRequest;
-    resources: Resource[];
     close: () => void;
     onOk: (request: UserRequest) => void;
+    getResource: (id: string) => Promise<Resource>;
 };
 
 export const EditRequestDialog = (props: EditRequestDialogProps) => {
-    const { selectedRequest, resources, close, onOk } = props;
+    const { selectedRequest, close, onOk, getResource } = props;
 
-    const [status, setStatus] = useState<RequestStatus>(selectedRequest.status)
+    const [status, setStatus] = useState<RequestStatus>(selectedRequest.status);
+    const [resources, setResources] = useState<Resource[]>([{} as Resource]);
+
+    useEffect(() => {
+        selectedRequest.requests
+            .forEach(r => getResource(r.resourceId)
+                .then(resource => setResources(r => [...r, resource])));
+    }, []);
 
     const handleOk = () => {
         const requestToSave: UserRequest = {
@@ -55,7 +61,6 @@ export const EditRequestDialog = (props: EditRequestDialogProps) => {
     const data: TableData[] = selectedRequest.requests
         ?.map(r => {
             const resource = resources.find(resource => resource.id == r.resourceId);
-            
             return {
                 ...r,
                 inventoryId: resource?.inventoryId || '',

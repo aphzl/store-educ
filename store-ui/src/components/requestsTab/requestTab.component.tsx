@@ -96,13 +96,13 @@ const RequestsTabTable = (props: RequestsTabTableProps) => {
 
     const [visibleEditRequestDialog, setVisibleEditRequestDialog] = useState<boolean>(false);
     const [selectedRequest, setSelectedRequest] = useState<UserRequest>({} as UserRequest);
-    const [resources, setResources] = useState<Resource[]>([])
+    // const [resources, setResources] = useState<Resource[]>([])
     
     const closeEditDialog = () => setVisibleEditRequestDialog(false);
     const onEdit = (userRequest: UserRequest) => {
-        userRequest.requests
-            .forEach(r => getResource(r.resourceId)
-                .then(resource => setResources([...resources, resource])));
+        // userRequest.requests
+        //     .forEach(r => getResource(r.resourceId)
+        //         .then(resource => setResources([...resources, resource])));
         setSelectedRequest(userRequest);
         setVisibleEditRequestDialog(true);
     };
@@ -168,9 +168,10 @@ const RequestsTabTable = (props: RequestsTabTableProps) => {
             {visibleEditRequestDialog && 
                 <EditRequestDialog
                     selectedRequest={selectedRequest}
-                    resources={resources}
+                    // resources={resources}
                     close={closeEditDialog}
                     onOk={onOkEdit}
+                    getResource={getResource}
                 />
             }
         </div>

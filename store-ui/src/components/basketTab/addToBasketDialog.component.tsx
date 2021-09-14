@@ -37,8 +37,9 @@ export const AddToBasketDialog = (props: AddToBasketDialogProps) => {
                         label='Количество'
                     >
                         <InputNumber
-                            min={0}
-                            defaultValue={0}
+                            min={1}
+                            max={resource.available}
+                            defaultValue={1}
                             type='number'
                             ref={inputRef}
                         />
