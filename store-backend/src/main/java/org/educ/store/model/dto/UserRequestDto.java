@@ -15,7 +15,6 @@ public class UserRequestDto implements Serializable {
 
     private String id;
     private String declarer;
-    private String comment;
     private RequestStatus status;
     private Long createdAt;
     private Long updatedAt;

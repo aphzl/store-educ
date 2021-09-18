@@ -22,7 +22,6 @@ public class FlyWayConfig {
         flyway.setOutOfOrder(true);
         flyway.setValidateOnMigrate(true);
         flyway.setPlaceholderPrefix("NO---------------NO");
-//        flyway.setLocations("classpath:db/migration");
 
         return flyway;
     }

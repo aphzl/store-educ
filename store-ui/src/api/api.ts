@@ -35,7 +35,6 @@ export const statusMap = {
 export type UserRequest = {
     id: string;
     declarer: string;
-    comment?: string;
     status: RequestStatus;
     createdAt?: number;
     updatedAt?: number;

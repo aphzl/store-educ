@@ -20,9 +20,7 @@ import java.util.Properties;
 
 @Configuration
 @EnableJpaRepositories("org.educ.store.repository")
-//@PropertySource("classpath:props/application.properties")
 @EnableTransactionManagement
-//@EntityScan("org.educ.store.model.entity")
 public class JpaConfig {
 
     private static final String[] ENTITYMANAGER_PACKAGES_TO_SCAN = {"org.educ.store.model.entity"};
@@ -34,14 +32,12 @@ public class JpaConfig {
     private static final String NON_CONTEXTUAL_CREATION = "hibernate.jdbc.lob.non_contextual_creation";
 
     private final DataSource dataSource;
-    private final Environment environment;
 
-    public JpaConfig(DataSource dataSource, Environment environment) {
+    public JpaConfig(DataSource dataSource) {
         this.dataSource = dataSource;
-        this.environment = environment;
     }
 
-    @Bean//(name = "entityManagerFactory")
+    @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setJpaVendorAdapter(jpaVendorAdapter());

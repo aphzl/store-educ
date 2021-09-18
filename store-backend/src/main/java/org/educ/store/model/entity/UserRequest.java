@@ -27,9 +27,6 @@ public class UserRequest {
     private String declarer;
 
     @Column
-    private String comment;
-
-    @Column
     @Enumerated(value = EnumType.STRING)
     private RequestStatus status;
 
@@ -60,7 +57,6 @@ public class UserRequest {
         return UserRequestDto.builder()
                 .id(id)
                 .declarer(declarer)
-                .comment(comment)
                 .status(status)
                 .createdAt(createdAt.getTime())
                 .updatedAt(updatedAt.getTime())

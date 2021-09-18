@@ -45,7 +45,6 @@ public class ConvertService {
         return UserRequest.builder()
                 .id(dto.getId())
                 .declarer(dto.getDeclarer())
-                .comment(dto.getComment())
                 .status(dto.getStatus())
                 .requests(requests)
                 .createdAt(existing.map(UserRequest::getCreatedAt).orElse(null))

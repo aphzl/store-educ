@@ -39,11 +39,6 @@ public class ResourceController {
         return resourceService.findById(id);
     }
 
-//    @GetMapping("/{inventoryId}/inventory")
-//    public ResourceDto findByInventoryId(@PathVariable("inventoryId") String inventoryId) {
-//        return resourceService.findByInventoryId(inventoryId);
-//    }
-
     @GetMapping("/{text}/text")
     public List<ResourceInfo> findByNameWith(@PathVariable("text") String text) {
         return resourceService.findByNameWith(text);

@@ -16,6 +16,7 @@ const BASKET_TAB_KEY = 'basket-tab';
 
 export const Pane = () => {
     const originUrl = window.location.origin;
+    // 3000 and 3001 use for deev
     const serverUrl = (originUrl.endsWith('3000') || originUrl.endsWith('3001')) ? 'http://localhost:8080' : originUrl;
     const api = new ApiBundle(serverUrl);
 
